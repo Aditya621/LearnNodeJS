@@ -1,5 +1,6 @@
 const fs = require("fs");
 const http = require("http");
+const path = require("node:path/win32");
 const url = require("url");
 //////////////////////////////////////////
 // FILES
@@ -27,7 +28,19 @@ const url = require("url");
 // SERVER
 
 const server = http.createServer((req, res) => {
-  res.end("This is come from server !");
+  const pathName = req.url;
+  console.log(pathName);
+  if (pathName === "/" || pathName === "/overview") {
+    res.end("This is come from Overview !");
+  } else if (pathName === "/product") {
+    res.end("This is come from Product !");
+  } else {
+    res.writeHead(404, {
+      "content-type": "text/html",
+      "my-own-header": "hello-world",
+    });
+    res.end("<h1>Page Not Found !<h1>");
+  }
 });
 
 server.listen(8000, "127.0.0.1", () => {
