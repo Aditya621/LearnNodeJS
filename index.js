@@ -30,6 +30,37 @@ const url = require("url");
 //i want my data will be called once
 // if i am using readFile in callBack then it will called every time when user send a request to SERVER
 // so i am using it a top level
+
+const replaceTemplate = (temp_cards, product) => {
+  let output = temp_cards.replace(/{%PRODUCTNAME%}/g, product.productName);
+  output = output.replace(/{%IMAGE%}/g, product.image);
+  output = output.replace(/{%DESCRIPTION%}/g, product.description);
+
+  output = output.replace(/{%PRICE%}/g, product.price);
+  output = output.replace(/{%QUANTITY%}/g, product.quantity);
+  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+  output = output.replace(/{%FROM%}/g, product.from);
+  output = output.replace(/{%ID%}/g, product.id);
+
+  if (!product.organic)
+    output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
+
+  return output;
+};
+
+const tempOverview = fs.readFileSync(
+  `${__dirname}/1-node-farm/starter/templates/template-overview.html`,
+  "utf-8"
+);
+const tempCard = fs.readFileSync(
+  `${__dirname}/1-node-farm/starter/templates/template-card.html`,
+  "utf-8"
+);
+const tempProduct = fs.readFileSync(
+  `${__dirname}/1-node-farm/starter/templates/template-product.html`,
+  "utf-8"
+);
+
 const data = fs.readFileSync(
   `${__dirname}/1-node-farm/starter/dev-data/data.json`,
   "utf-8"
@@ -39,13 +70,29 @@ const dataObj = JSON.parse(data);
 const server = http.createServer((req, res) => {
   const pathName = req.url;
   console.log(pathName);
+  // OVERVIEW Page
   if (pathName === "/" || pathName === "/overview") {
-    res.end("This is come from Overview !");
+    res.writeHead(200, { "content-type": "text/html" });
+
+    const cardsHtml = dataObj
+      .map((el) => {
+        return replaceTemplate(tempCard, el);
+      })
+      .join("");
+    // console.log(cardsHtml);
+    const output = tempOverview.replace(/{%PRODUCT_CARDS%}/g, cardsHtml);
+    res.end(output);
+
+    //PRODUCT Page
   } else if (pathName === "/product") {
     res.end("This is come from Product !");
+
+    //API Page
   } else if (pathName === "/api") {
     res.writeHead(200, { "content-type": "application/json" });
     res.end(data);
+
+    //PAGE NOT FOUND
   } else {
     res.writeHead(404, {
       "content-type": "text/html",
