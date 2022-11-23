@@ -1,0 +1,25 @@
+{
+  "name": "node-farm",
+  "version": "1.0.0",
+  "description": "learning node js",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aditya621/LearnNodeJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aditya621/LearnNodeJS/issues"
+  },
+  "homepage": "https://github.com/Aditya621/LearnNodeJS#readme",
+  "dependencies": {
+    "slugify": "^1.6.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
