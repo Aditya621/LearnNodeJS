@@ -20,26 +20,49 @@ const writeFilePro = (fileName, data) => {
   });
 };
 
-// this is chaining in promises
-// return new promises and make chaninig
-readFilePro(`${__dirname}/Asynchronous/dog.txt`)
-  .then((data) => {
+// now we are using async await for more readable code
+
+const getDogPic = async () => {
+  try {
+    const data = await readFilePro(`${__dirname}/Asynchronous/dog.txt`);
     console.log(`Breed : ${data}`);
-    return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
-  })
-  .then((res) => {
+    const res = await superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
     console.log(res.body.message);
-    return writeFilePro(
+
+    await writeFilePro(
       `${__dirname}/Asynchronous/dog-img.txt`,
       res.body.message
     );
-  })
-  .then(() => {
     console.log('Random Dog Image Save To File');
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+getDogPic();
+
+// this is chaining in promises
+// return new promises and make chaninig
+// readFilePro(`${__dirname}/Asynchronous/dog.txt`)
+//   .then((data) => {
+//     console.log(`Breed : ${data}`);
+//     return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+//   })
+//   .then((res) => {
+//     console.log(res.body.message);
+//     return writeFilePro(
+//       `${__dirname}/Asynchronous/dog-img.txt`,
+//       res.body.message
+//     );
+//   })
+//   .then(() => {
+//     console.log('Random Dog Image Save To File');
+//   })
+//   .catch((err) => {
+//     console.log(err.message);
+//   });
 
 // fs.readFile(`${__dirname}/Asynchronous/dog.txt`, (err, data) => {
 //   console.log(`Breed : ${data}`);
