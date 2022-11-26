@@ -6,6 +6,17 @@ const app = express();
 //Add middleware
 app.use(express.json());
 
+// Create our own Middleware
+app.use((req, res, next) => {
+  console.log('Hello, This is come from Middleware 👋🙋‍♂️');
+  next();
+});
+//Manipulate request parameters
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+
 // app.get('/', (req, res) => {
 //   res
 //     .status(200)
@@ -44,8 +55,10 @@ const createTour = (req, res) => {
 };
 //Read
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestAt: req.requestTime,
     data: {
       tours,
     },
