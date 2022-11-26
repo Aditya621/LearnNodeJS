@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Aditya621/LearnNodeJS#readme",
   "dependencies": {
+    "express": "^4.18.2",
     "slugify": "^1.6.5",
     "superagent": "^8.0.3"
   },
