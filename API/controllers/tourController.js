@@ -4,6 +4,28 @@ const tours = JSON.parse(
   fs.readFileSync(`API/dev-data/data/tours-simple.json`)
 );
 
+// make middleware to check ID is valid or not
+exports.checkID = (req, res, next, val) => {
+  console.log(`ID is ${val}`);
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid Id',
+    });
+  }
+  next();
+};
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'name or price is not specified',
+    });
+  }
+  next();
+};
+
 //Create
 //And post is to create a new tour
 // we send data from client to the ser
@@ -45,15 +67,6 @@ exports.getTour = (req, res) => {
 
   // find Id from tours object
   const tour = tours.find((el) => el.id === id);
-
-  // if id is greater than total number of Id
-  //   if (id > tours.length) {
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Invalid Id',
-    });
-  }
   //   console.log(typeof tour);
   res.status(200).json({
     status: 'success',
@@ -66,13 +79,6 @@ exports.getTour = (req, res) => {
 // put => we expexct that our application receives entire new updated Object
 // patch => we only need to update some properties of Object
 exports.updateTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Invalid Id',
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -82,13 +88,6 @@ exports.updateTour = (req, res) => {
 };
 //Delete
 exports.deleteTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'Invalid Id',
-    });
-  }
-
   //204 means no content
   res.status(204).json({
     status: 'success',

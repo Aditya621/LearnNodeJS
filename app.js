@@ -7,8 +7,11 @@ const userRouter = require('./API/routes/userRoute');
 const app = express();
 
 //Add middleware
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(express.static(`${__dirname}/API/public`));
 
 // Create our own Middleware
 app.use((req, res, next) => {
